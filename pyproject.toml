@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "lega4e_library"
-version = "0.0.1"
+version = "0.0.4"
 requires-python = ">= 3.9"
 description = "Lega4e Library"
 readme = "README.md"
