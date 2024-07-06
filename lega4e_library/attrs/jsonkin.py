@@ -78,39 +78,47 @@ def jsonkin(cls):
     elif isinstance(json, cls):
       return json
     else:
-      return fromJson(json)
+      return cls.fromJson(json)
 
   def listJsonConverter(jsons):
-    return [jsonConverter(json) for json in jsons]
+    try:
+      list_validator(cls)(None, None, jsons)
+      return jsons
+    except ValueError:
+      return [cls.jsonConverter(json) for json in jsons]
 
   def listListJsonConverter(jsons):
-    return [listJsonConverter(json) for json in jsons]
+    try:
+      list_list_validator(cls)(None, None, jsons)
+      return jsons
+    except ValueError:
+      return [cls.listJsonConverter(json) for json in jsons]
 
   def attrField(**kwargs):
     return field(
       validator=instance_of(cls),
-      converter=jsonConverter,
+      converter=cls.jsonConverter,
       **kwargs,
     )
 
   def attrOptionalField(**kwargs):
     return field(
       validator=instance_of(Optional[cls]),
-      converter=jsonConverter,
+      converter=cls.jsonConverter,
       **kwargs,
     )
 
   def attrListField(**kwargs):
     return field(
       validator=list_validator(cls),
-      converter=listJsonConverter,
+      converter=cls.listJsonConverter,
       **kwargs,
     )
 
   def attrListListField(**kwargs):
     return field(
       validator=list_list_validator(cls),
-      converter=listJsonConverter,
+      converter=cls.listListJsonConverter,
       **kwargs,
     )
 
@@ -164,14 +172,14 @@ def jsonkinEnum(cls):
   def attrListField(**kwargs):
     return field(
       validator=list_validator(cls),
-      converter=listJsonConverter,
+      converter=cls.listJsonConverter,
       **kwargs,
     )
 
   def attrListListField(**kwargs):
     return field(
       validator=list_list_validator(cls),
-      converter=listJsonConverter,
+      converter=cls.listJsonConverter,
       **kwargs,
     )
 

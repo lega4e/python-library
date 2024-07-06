@@ -28,3 +28,14 @@ def is_today(timestamp: dt.datetime):
 
 def is_same_day(one: dt.datetime, two: dt.datetime):
   return (one.year, one.month, one.day) == (two.year, two.month, two.day)
+
+
+def dt2str(dt: dt.datetime) -> str:
+  return dt.strftime('%Y.%m.%d %H:%M:%S.%f')
+
+
+def str2dt(s: str) -> dt.datetime:
+  try:
+    return dt.datetime.strptime(s, '%Y.%m.%d %H:%M:%S.%f')
+  except ValueError:
+    return dt.datetime.strptime(s, '%Y.%m.%d %H:%M:%S')

@@ -1,3 +1,4 @@
 lega4e_library.egg-info
 dist
 .idea
+__pycache__
