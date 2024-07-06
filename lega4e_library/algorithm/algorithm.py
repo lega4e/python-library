@@ -42,3 +42,23 @@ def find_if(predicat: Callable, iterable: Iterable, default=None) -> Any:
     if predicat(value):
       return value
   return default
+
+
+def best(
+  iterable: Iterable,
+  better=lambda a, b: a > b,
+  *,
+  key=lambda x: x,
+  allowNone=False,
+):
+  bst = None
+  for val in iterable:
+    if bst is None and not allowNone or better(key(val), key(bst)):
+      bst = val
+  return bst
+
+
+def let(value, action: Callable, condition=None, default=None):
+  if condition is None:
+    condition = lambda val: val is not None
+  return action(value) if condition(value) else default

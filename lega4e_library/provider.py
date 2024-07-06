@@ -5,10 +5,10 @@ from typing import Dict, Any, Callable, Optional
 
 class Storage(Dict):
 
-  def __call__(self, providerFun: Any, **kwargs) -> Any:
+  def __call__(self, providerFun: Any, *args, **kwargs) -> Any:
     if inspect.isclass(providerFun):
-      return providerFun.provider(self, **kwargs)
-    return providerFun(self, **kwargs)
+      return providerFun.provider(self, *args, **kwargs)
+    return providerFun(self, *args, **kwargs)
 
 
 _storage: Optional[Storage] = None
@@ -25,13 +25,13 @@ def storage() -> Storage:
 def provider(fun_or_class: Any):
   if isinstance(fun_or_class, types.FunctionType):
 
-    def wrapper(ref: Optional[Storage] = None, **kwargs) -> Any:
+    def wrapper(ref: Optional[Storage] = None, *args, **kwargs) -> Any:
       ref = ref or storage()
-      key = _calculate_key(fun_or_class, **kwargs)
+      key = _calculate_key(fun_or_class, *args, **kwargs)
 
       value = ref.get(key)
       if value is None:
-        value = fun_or_class(ref, **kwargs)
+        value = fun_or_class(ref, *args, **kwargs)
         ref[key] = value
       return value
 
@@ -47,8 +47,10 @@ def provider(fun_or_class: Any):
     return fun_or_class
 
 
-def _calculate_key(fun: Callable, **kwargs) -> str:
+def _calculate_key(fun: Callable, *args, **kwargs) -> str:
   key = str(hash(fun))
+  for arg in args:
+    key += f'_{hash(arg)}'
   for k, v in kwargs.items():
-    key += f'_{k}_{hash(v)}'
+    key += f'_{k}={hash(v)}'
   return key

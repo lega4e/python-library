@@ -6,5 +6,6 @@ from .asyncio.utils import *
 from .attrs.jsonkin import *
 from .attrs.validators import *
 from .datetime.utils import *
+from .json.json_manager import *
 from .notifier import *
 from .provider import *

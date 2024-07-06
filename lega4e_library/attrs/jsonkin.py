@@ -47,7 +47,22 @@ class Jsonkin:
 def jsonkin(cls):
 
   def toJson(self):
-    return asdict(self)
+
+    def serialize(_, __, value):
+      if isinstance(value, Jsonkin):
+        return value.toJson()
+      elif isinstance(value, list):
+        return [serialize(None, None, v) for v in value]
+      elif isinstance(value, set):
+        return {serialize(None, None, v) for v in value}
+      elif isinstance(value, dict):
+        return {
+          serialize(None, None, k): serialize(None, None, v)
+          for k, v in value.items()
+        }
+      return value
+
+    return asdict(self, value_serializer=serialize)
 
   def fromJson(json):
     filtered = {
