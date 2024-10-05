@@ -44,6 +44,5 @@ class Notifier:
     """
     for e, callback in copy(list(self._listeners.values())):
       if e == event:
-        print(args, kwargs)
         callback(self, *args, **kwargs)
     return self
